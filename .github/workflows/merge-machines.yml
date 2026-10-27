@@ -1,0 +1,62 @@
+name: merge machine branches into main
+
+on:
+  push:
+    branches: ["machine/**"]
+  workflow_dispatch:
+
+concurrency:
+  group: merge-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: merge machine branches in join order
+        run: |
+          set -e
+          git config user.name  "skills-sync-bot"
+          git config user.email "skills-sync-bot@users.noreply.github.com"
+
+          # Join order lives in .github/machine-order, appended by
+          # _sync/bootstrap.sh when a machine creates its branch. Branches that
+          # are missing from that file are merged last, in name order.
+          ORDER_FILE=".github/machine-order"
+          listed=""
+          if [ -f "$ORDER_FILE" ]; then
+            listed=$(sed 's/\r$//' "$ORDER_FILE" | grep -v '^[[:space:]]*#' | sed '/^[[:space:]]*$/d' || true)
+          fi
+          branches=$(git ls-remote --heads origin 'refs/heads/machine/*' \
+                     | sed 's#.*refs/heads/machine/##' | sort)
+
+          ordered=""
+          for n in $listed; do
+            for b in $branches; do
+              if [ "$n" = "$b" ]; then ordered="$ordered $n"; fi
+            done
+          done
+          for n in $branches; do
+            case " $ordered " in *" $n "*) ;; *) ordered="$ordered $n" ;; esac
+          done
+
+          for b in $ordered; do
+            git fetch origin "machine/$b"
+            if git merge --no-edit "origin/machine/$b"; then
+              echo "merged machine/$b"
+            else
+              echo "::error::conflict merging machine/$b - resolve it on that machine"
+              git merge --abort || true
+              exit 1
+            fi
+          done
+
+          git push origin HEAD:main

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Block direct pushes to main. The merge workflow is main's only writer.
+# Installed to .git/hooks/pre-push by bootstrap.sh.
+set -u
+name="${SKILLS_MACHINE:-$(hostname 2>/dev/null | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g; s/--*/-/g; s/^-//; s/-$//')}"
+rc=0
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main|refs/heads/master)
+      cat >&2 <<EOF
+BLOCKED: direct pushes to main are not allowed.
+         main is written only by .github/workflows/merge-machines.yml
+         push your own branch instead:  machine/$name
+EOF
+      rc=1 ;;
+  esac
+done
+exit $rc
