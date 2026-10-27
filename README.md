@@ -25,11 +25,19 @@ place is a GitHub Actions job with a `concurrency` group.
 ## Install
 
 ```bash
-hermes skills tap add <owner>/hermes-skills-sync
-hermes skills install skills-git-sync
+hermes skills install neillized/hermes-skills-sync/skills/skills-git-sync
 ```
 
 Or copy `skills/skills-git-sync/` into your skills directory by hand.
+
+Pass the full identifier: a bare `hermes skills install skills-git-sync` only resolves when that
+name is unique across *every* source, and it is not.
+
+**Taps.** `hermes skills tap add neillized/hermes-skills-sync` registers this repo as a `github`
+source, and the skill sits directly under `skills/` because the tap reader walks exactly one level
+down from that path. Be aware the GitHub source is searched after the built-in repositories and has
+a 30 s budget without a token, so on a machine with no `gh auth login` / `GITHUB_TOKEN` a custom tap
+often returns nothing at all. The identifier above needs neither a tap nor a token.
 
 ## Join a machine
 

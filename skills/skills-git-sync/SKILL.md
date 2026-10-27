@@ -1,7 +1,7 @@
 ---
 name: skills-git-sync
 description: Use when syncing Hermes skills across several machines. Branch-per-machine git sync with server-side merge.
-version: 1.1.0
+version: 1.1.1
 ---
 
 # Syncing skills across machines
