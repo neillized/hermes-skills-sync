@@ -1,6 +1,6 @@
 # Why one branch per machine
 
-See `skills/devops/skills-git-sync/references/architecture.md` for the full explanation.
+See `skills/skills-git-sync/references/architecture.md` for the full explanation.
 
 Short version: a git push is a compare-and-swap on a ref. Two machines pushing `main`
 means the second one's base is stale, so it is rejected - correctly, because accepting it

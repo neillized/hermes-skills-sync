@@ -1,7 +1,7 @@
 ---
 name: skills-git-sync
 description: Use when syncing Hermes skills across several machines. Branch-per-machine git sync with server-side merge.
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Syncing skills across machines
@@ -34,7 +34,7 @@ serialised place do the merge. Here that place is a GitHub Actions job with a
 
 ```bash
 cd <skills dir>                     # the clone
-bash skills/devops/skills-git-sync/scripts/bootstrap.sh
+bash skills/skills-git-sync/scripts/bootstrap.sh
 ```
 
 Then schedule `scripts/skills-sync.sh` daily. All machines may use the same hour.

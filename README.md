@@ -29,13 +29,13 @@ hermes skills tap add <owner>/hermes-skills-sync
 hermes skills install skills-git-sync
 ```
 
-Or copy `skills/devops/skills-git-sync/` into your skills directory by hand.
+Or copy `skills/skills-git-sync/` into your skills directory by hand.
 
 ## Join a machine
 
 ```bash
 cd <your skills dir>            # the git clone
-bash skills/devops/skills-git-sync/scripts/bootstrap.sh
+bash skills/skills-git-sync/scripts/bootstrap.sh
 ```
 
 `bootstrap.sh` picks a machine name (env `SKILLS_MACHINE`, else
@@ -71,10 +71,10 @@ that merges each `machine/*` branch into `main`.
 ## Layout
 
 ```
-skills/devops/skills-git-sync/    the skill: SKILL.md, scripts, references
-.github/workflows/                the merge workflow
-.github/machine-order             merge order (append on join)
-docs/                             design notes and conflict handling
+skills/skills-git-sync/   the skill: SKILL.md, scripts, references
+.github/workflows/        the merge workflow
+.github/machine-order     merge order (append on join)
+docs/                     design notes and conflict handling
 ```
 
 MIT licensed.
